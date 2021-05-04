@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    
+    <title>A complete guide on shadow DOM and event propagation | Pierre-Marie Dartus</title>
+    <meta property="og:title" content="A complete guide on shadow DOM and event propagation | Pierre-Marie Dartus">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    
+    
+    
+      <meta name="description" content="Explaining everything to know about shadow DOM and event propagation with interactive visuals.">
+      <meta property="og:description" content="Explaining everything to know about shadow DOM and event propagation with interactive visuals.">
+    
+
+    <meta name="og:image" content="https://pm.dartus.fr/img/profile-picture.jpg">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@pmdartus">
+    <meta name="twitter:creator" content="@pmdartus">
+
+    <link rel="icon" href="/img/favicon.svg">
+
+    
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-HT3BFLYYQT"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-HT3BFLYYQT');
+      </script>
+    
+
+    <style>
+        @font-face{font-family:"Merriweather";font-style:normal;font-weight:300;src:url("/fonts/merriweather-v22-latin-300.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-300.woff") format("woff");font-display:swap}@font-face{font-family:"Merriweather";font-style:italic;font-weight:300;src:url("/fonts/merriweather-v22-latin-300italic.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-300italic.woff") format("woff");font-display:swap}@font-face{font-family:"Merriweather";font-style:normal;font-weight:400;src:url("/fonts/merriweather-v22-latin-regular.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-regular.woff") format("woff");font-display:swap}@font-face{font-family:"Merriweather";font-style:italic;font-weight:400;src:url("/fonts/merriweather-v22-latin-italic.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-italic.woff") format("woff");font-display:swap}@font-face{font-family:"Merriweather";font-style:normal;font-weight:700;src:url("/fonts/merriweather-v22-latin-700.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-700.woff") format("woff");font-display:swap}@font-face{font-family:"Merriweather";font-style:italic;font-weight:700;src:url("/fonts/merriweather-v22-latin-700italic.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-700italic.woff") format("woff");font-display:swap}@font-face{font-family:"Merriweather";font-style:normal;font-weight:900;src:url("/fonts/merriweather-v22-latin-900.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-900.woff") format("woff");font-display:swap}@font-face{font-family:"Merriweather";font-style:italic;font-weight:900;src:url("/fonts/merriweather-v22-latin-900italic.woff2") format("woff2"),url("/fonts/merriweather-v22-latin-900italic.woff") format("woff");font-display:swap}/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-0.25em}sup{top:-0.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}template{display:none}[hidden]{display:none}html{font-size:62.5%;font-family:"Merriweather",Georgia,"Times New Roman",Times,serif}body{font-size:1.6rem;line-height:1.8;max-width:50em;margin:auto;color:#383838;background-color:#f9f9f9;padding:13px}@media(max-width: 684px){body{font-size:1.36rem}}@media(max-width: 382px){body{font-size:1.2rem}}h1,h2,h3,h4,h5,h6{line-height:1.1;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;font-weight:700;margin-top:3rem;margin-bottom:1.5rem;overflow-wrap:break-word;word-wrap:break-word;-ms-word-break:break-all;word-break:break-word}h1{font-size:2.35em}h2{font-size:2em}h3{font-size:1.75em}h4{font-size:1.5em}h5{font-size:1.25em}h6{font-size:1em}p{margin-top:0px;margin-bottom:2.5rem}small,sub,sup{font-size:75%}hr{border-color:#2bbc8a}a{text-decoration:none;color:#2bbc8a}a:hover{color:#982c61;border-bottom:2px solid #383838}a:visited{color:#22926c}ul{padding-left:1.4em;margin-top:0px;margin-bottom:2.5rem}li{margin-bottom:.4em}blockquote{margin-left:0px;margin-right:0px;padding-left:1em;padding-top:.8em;padding-bottom:.8em;padding-right:.8em;border-left:5px solid #2bbc8a;margin-bottom:2.5rem;background-color:#f1f1f1}blockquote p{margin-bottom:0}img,video{height:auto;max-width:100%;margin-top:0px;margin-bottom:2.5rem}pre{background-color:#f1f1f1;display:block;padding:1em;overflow-x:auto;margin-top:0px;margin-bottom:2.5rem}code{font-size:.9em;padding:0 .5em;background-color:#f1f1f1;white-space:pre-wrap}pre>code{padding:0;background-color:transparent;white-space:pre}table{text-align:justify;width:100%;border-collapse:collapse}td,th{padding:.5em;border-bottom:1px solid #f1f1f1}input,textarea{border:1px solid #383838}input:focus,textarea:focus{border:1px solid #2bbc8a}textarea{width:100%}.button,button,input[type=submit],input[type=reset],input[type=button]{display:inline-block;padding:5px 10px;text-align:center;text-decoration:none;white-space:nowrap;background-color:#2bbc8a;color:#f9f9f9;border-radius:1px;border:1px solid #2bbc8a;cursor:pointer;box-sizing:border-box}.button[disabled],button[disabled],input[type=submit][disabled],input[type=reset][disabled],input[type=button][disabled]{cursor:default;opacity:.5}.button:focus:enabled,.button:hover:enabled,button:focus:enabled,button:hover:enabled,input[type=submit]:focus:enabled,input[type=submit]:hover:enabled,input[type=reset]:focus:enabled,input[type=reset]:hover:enabled,input[type=button]:focus:enabled,input[type=button]:hover:enabled{background-color:#982c61;border-color:#982c61;color:#f9f9f9;outline:0}textarea,select,input{color:#383838;padding:6px 10px;margin-bottom:10px;background-color:#f1f1f1;border:1px solid #f1f1f1;border-radius:4px;box-shadow:none;box-sizing:border-box}textarea:focus,select:focus,input:focus{border:1px solid #2bbc8a;outline:0}input[type=checkbox]:focus{outline:1px dotted #2bbc8a}label,legend,fieldset{display:block;margin-bottom:.5rem;font-weight:600}pre[class*=language-],code[class*=language-]{color:#5c6e74;font-size:.9em;text-shadow:none;font-family:Consolas,Monaco,"Andale Mono","Ubuntu Mono",monospace;direction:ltr;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;line-height:1.5;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]::selection,pre[class*=language-]::mozselection,code[class*=language-]::selection,code[class*=language-]::mozselection{text-shadow:none;background:#b3d4fc}@media print{pre[class*=language-],code[class*=language-]{text-shadow:none}}pre[class*=language-]{padding:1em;margin:.5em 0;overflow:auto;background:#f8f5ec}:not(pre)>code[class*=language-]{padding:.1em .3em;border-radius:.3em;color:#db4c69;background:#f9f2f4}.namespace{opacity:.7}.token.comment,.token.prolog,.token.doctype,.token.cdata{color:#93a1a1}.token.punctuation{color:#999}.token.property,.token.tag,.token.boolean,.token.number,.token.constant,.token.symbol,.token.deleted{color:#905}.token.selector,.token.attr-name,.token.string,.token.char,.token.builtin,.token.inserted{color:#690}.token.operator,.token.entity,.token.url,.language-css .token.string,.style .token.string{color:#a67f59;background:rgba(255,255,255,.5)}.token.atrule,.token.attr-value,.token.keyword{color:#07a}.token.function{color:#dd4a68}.token.regex,.token.important,.token.variable{color:#e90}.token.important,.token.bold{font-weight:bold}.token.italic{font-style:italic}.token.entity{cursor:help}pre[data-line]{position:relative}pre[class*=language-]>code[class*=language-]{position:relative;z-index:1}.line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:#f7ebc6;box-shadow:inset 5px 0 0 #f7d87c;z-index:0;pointer-events:none;line-height:inherit;white-space:pre}header{display:flex;justify-content:space-between}@media(max-width: 684px){header{flex-direction:column;align-items:center}}header a{color:#2bbc8a;border-bottom:none}header a:hover{border-bottom:none}header .title{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Open Sans","Helvetica Neue",sans-serif;font-weight:800;font-size:1.5em}header nav{font-weight:800}header nav a{font-weight:500}h1 .header-anchor,h2 .header-anchor,h3 .header-anchor,h4 .header-anchor,h5 .header-anchor{visibility:hidden;border-bottom:none;text-decoration:none}h1:hover .header-anchor,h2:hover .header-anchor,h3:hover .header-anchor,h4:hover .header-anchor,h5:hover .header-anchor{visibility:visible}a{color:#2bbc8a;border-bottom:1px solid #2bbc8a}a:hover{border-bottom:none}a:visited,a:hover{color:#2bbc8a}ul.pagination{padding:0;list-style:none;display:flex;justify-content:space-between;flex-wrap:wrap}aside,footer{color:#8c8c8c;font-size:.9em}footer{margin-top:2.5em}
+    </style>
+
+    
+<script type="application/ld+json">
+  { 
+    "@context": "https://schema.org", 
+    "@type": "BlogPosting",
+    "headline": "A complete guide on shadow DOM and event propagation",
+    "datePublished": "2021-04-24",
+    "dateModified": "2021-04-24",
+    "author": {
+      "@type": "Person",
+      "name": "Pierre-Marie Dartus"
+    }
+  }
+</script>
+
+</head>
+<body>
+    <header>
+    <a class="title" href="/" title="Homepage">pmdartus</a>
+
+    <nav>
+        [
+                <a href="/">About</a>
+                /
+                <a href="/blog/">Blog</a>
+                
+        ]
+    </nav>
+</header>
+
+    <main>
+        
+  <article>
+    <h1>A complete guide on shadow DOM and event propagation</h1>
+    <aside>Published on <time datetime="2021-04-24">Apr. 24, 2021</time> - 8 min read</aside>
+
+    <section class="content">
+      <style>
+  event-visualizer {
+    margin-bottom: 2.5rem;
+  }
+
+  event-visualizer:not(:defined) {
+    display: flex;
+    flex-direction: column;
+    height: 500px;
+    padding: 12px;
+    font-family: arial, sans-serif;
+    background: #fff;
+    border: 1px solid #b1b1b1;
+    border-radius: 3px;
+  }
+
+  event-visualizer:not(:defined):before {
+    content: attr(label);
+    font-weight: 600;
+  }
+
+  event-visualizer:not(:defined):after {
+    content: 'Loading...';
+    color: #9e9e9e;
+  }
+</style>
+<noscript>
+  <style>
+    event-visualizer:not(:defined):after {
+      content: 'Turn on JavaScript and reload this page to enjoy this beautiful this interactive visualization.';
+    }
+  </style>
+</noscript>
+<p>Shadow DOM directly influences how event propagate through the DOM. It took me quite some time to fully appreciate this. Even if there is a lot of content on the web covering this topic, I haven't found an article going into all the nuances shadow DOM adds to event propagation.</p>
+<p>This article is my attempt to give a complete overview of how eventing works in the shadow DOM.</p>
+<h2 id="shadow-dom-and-encapsulation">Shadow DOM and encapsulation <a class="header-anchor" href="#shadow-dom-and-encapsulation">#</a></h2>
+<p>Shadow DOM is a browser built-in encapsulation mechanism. This mechanism <strong>offers a way for developers to author components that are safe to distribute and consume on third-party pages</strong>. The shadow DOM encapsulation works both ways. First, it prevents component internals to be introspectable from outside the shadow DOM. But it also prevents shadow DOM internals from bleeding into the document.</p>
+<p>One of the features Shadow DOM is most known for is its style scoping enforcement. Page-level styles don't get applied to elements rendered in a shadow tree. And styles injected in the shadow tree don't get applied at the page level.</p>
+<p>All the spec adjustments and new features related to eventing that have been introduced along with shadow DOM revolve around this idea of how it enables developers to author components complying with this new encapsulation mechanism. Let's dive into it.</p>
+<h2 id="the-shadowroot-constructor">The <code>ShadowRoot</code> constructor <a class="header-anchor" href="#the-shadowroot-constructor">#</a></h2>
+<p>The <code>ShadowRoot</code> is a constructor that has been introduced with shadow DOM. It extends <code>EventTarget</code> and therefore it is capable of dispatching and listening for events like other DOM nodes.</p>
+<pre class="language-js"><code class="language-js"><span class="token keyword">const</span> div <span class="token operator">=</span> document<span class="token punctuation">.</span><span class="token function">createElement</span><span class="token punctuation">(</span><span class="token string">"div"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token keyword">const</span> shadowRoot <span class="token operator">=</span> div<span class="token punctuation">.</span><span class="token function">attachShadow</span><span class="token punctuation">(</span><span class="token punctuation">{</span> mode<span class="token operator">:</span> <span class="token string">"open"</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br>shadowRoot<span class="token punctuation">.</span><span class="token function">addEventListener</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token parameter">evt</span><span class="token punctuation">)</span> <span class="token operator">=></span> <span class="token punctuation">{</span><br>  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">">> Shadow root listener invoked"</span><span class="token punctuation">,</span> evt<span class="token punctuation">)</span><span class="token punctuation">;</span><br><span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br><br><span class="token keyword">const</span> evt <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Event</span><span class="token punctuation">(</span><span class="token string">"test"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><br>shadowRoot<span class="token punctuation">.</span><span class="token function">dispatchEvent</span><span class="token punctuation">(</span>evt<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>The shadow root is the root node for a shadow tree. It is possible to listen to any event originating from a shadow tree by adding the appropriate event listener directly on the shadow root.</p>
+<p>Similar to how events work in the light DOM, events only bubble in the shadow DOM if the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/bubbles"><code>bubbles</code></a> option is set to <code>true</code>: <code>new Event('test', { bubbles: true })</code>. Events dispatched from within the shadow tree invoke the shadow root listeners if the event is marked as <code>bubbles</code>.</p>
+<h2 id="escaping-the-shadow-trees-using-composed">Escaping the shadow trees using <code>composed</code> <a class="header-anchor" href="#escaping-the-shadow-trees-using-composed">#</a></h2>
+<p>By default, events don't propagate outside shadow trees. This default behavior ensures that internal DOM events don't inadvertently leak into the document.</p>
+<p>In the example, dispatching a bubbling event from the <code>span#d</code> propagates to <code>p#c</code> and the shadow root, but it stops there. The event never reaches <code>div#a</code> since the element lives outside the shadow tree.</p>
+<event-visualizer label="Single shadow tree" event-bubbles>
+  <template>
+    <div id="a">
+      <template data-shadowroot="open">
+        <p id="c">
+          <span id="d" target></span>
+        </p>
+        <p id="e"></p>
+      </template>
+      <img id="b"></img>
+    </div>
+  </template>
+</event-visualizer>
+<p><strong>For an event to traverse shadow DOM boundaries, it has to be configured as <a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/composed"><code>composed</code></a></strong>: <code>new Event('test', { bubbles: true, composed: true })</code>. Going back to the previous example, if <code>composed</code> is enabled, you can see the event escaping the shadow tree and reaching <code>div#a</code>.</p>
+<p>When the <code>composed</code> option is set to <code>true</code>, the dispatched event not only traverses its shadow boundary but also any other parent boundary. In the following example, the bubbling and composed event dispatched from <code>span#e</code> bubble to <code>div#c</code>, <code>div#a</code>, and their respective shadow roots.</p>
+<event-visualizer label="Nested shadow trees" event-bubbles event-composed>
+  <template>
+    <div id="a">
+      <template data-shadowroot="open">
+        <div id="c">
+          <template data-shadowroot="open">
+            <span id="e" target></span>
+          </template>
+          <p id="d"></p>
+        </div>
+      </template>
+      <img id="b"></img>
+    </div>
+  </template>
+</event-visualizer>
+<p>This might be counterintuitive, but a composed event always propagates outside the shadow boundary regardless of whether it is bubbling or not. Give it a shot and set <code>bubbles</code> to false in the previous example to see how the event propagates.</p>
+<p>As you can see, when the dispatched event is composed only, the event propagates from one host element to another, <code>div#c</code> and <code>div#a</code>, without propagating through the intermediary nodes. When thinking about DOM event propagation, <strong><code>bubbles</code> indicates if the event propagates through the parent hierarchy</strong> while <strong><code>composed</code> indicates if the event should propagate through the shadow DOM hierarchy</strong>. A bubbling and composed event propagates through all the nodes from the dispatched one up to the document root.</p>
+<p>Now that you better understand how events propagate in the shadow DOM, it is important to call out that you should think carefully about how your events are configured, especially if you are building some complex applications. While it might be tempting to make them all composed and bubbling, it should not be your go-to events configuration. Events are part of the public API exposed by a web component. Not all events are equal, and only certain events are worth being exposed outside the component shadow tree.</p>
+<h2 id="what-about-standard-events%3F">What about standard events? <a class="header-anchor" href="#what-about-standard-events%3F">#</a></h2>
+<!---
+Generated running the following script on: https://w3c.github.io/uievents
+
+Array.from(document.querySelectorAll('.event-definition')).map(el => {
+  const tableValue = field => Array.from(el.querySelectorAll('th')).find(th => th.textContent.trim() === field)?.nextSibling.textContent.trim();
+  return { type: tableValue('Type'), bubbles: tableValue('Bubbles'), composed: tableValue('Composed') }
+});
+
+- https://w3c.github.io/touch-events/#touch-interface
+- https://w3c.github.io/pointerevents/#firing-events-using-the-pointerevent-interface
+- https://w3c.github.io/clipboard-apis/#clipboard-event-definitions
+-->
+<p>Most of the standard <a href="https://w3c.github.io/uievents">UI events</a> bubble and are composed with a few exceptions. There are a few exceptions like <code>mouseenter</code> and <code>mouseleave</code> that aren't bubbling and composed. Finally, the <code>slotchange</code> event stands out as the only bubbling and non-composed event.</p>
+<details>
+    <summary>Complete event list</summary>
+<ul>
+<li><strong>Bubbling and non-composed events:</strong> <code>slotchange</code></li>
+<li><strong>Non-bubbling and non-composed events:</strong> <code>mouseenter</code>, <code>mouseleave</code>, <code>pointerenter</code>, <code>pointerleave</code></li>
+<li><strong>Bubbling and composed events:</strong> <code>focusin</code>, <code>focusout</code>, <code>auxclick</code>, <code>click</code>, <code>dblclick</code>, <code>mousedown</code>, <code>mousemove</code>, <code>mouseout</code>, <code>mouseover</code>, <code>mouseup</code>, <code>wheel</code>, <code>input</code>, <code>keydown</code>, <code>keyup</code>, <code>keypress</code>, <code>touchstart</code>, <code>touchend</code>, <code>touchmove</code>, <code>pointerover</code>, <code>pointerdown</code>, <code>pointermove</code>, <code>pointerup</code>, <code>pointerout</code></li>
+</ul>
+</details>
+<h2 id="event.prototype.target-and-event-retargeting"><code>Event.prototype.target</code> and event retargeting <a class="header-anchor" href="#event.prototype.target-and-event-retargeting">#</a></h2>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/target"><code>Event.prototype.target</code></a> property references the object from which the event was dispatched. When an event is dispatched from a DOM node, its <code>target</code> is set to the node from which the event originates.</p>
+<p>To preserve shadow DOM encapsulation and avoid leaking component internals, the <strong><code>target</code> is updated to the host element as events cross shadow boundaries</strong>. This process is called event retargeting. Let's take the same nested shadow tree example that we used before to illustrate this aspect:</p>
+<event-visualizer label="Nested shadow trees" event-bubbles event-composed>
+  <template>
+    <div id="a">
+      <template data-shadowroot="open">
+        <div id="c">
+          <template data-shadowroot="open">
+            <span id="e" target></span>
+          </template>
+          <p id="d"></p>
+        </div>
+      </template>
+      <img id="b"></img>
+    </div>
+  </template>
+</event-visualizer>
+<p>When the composed event propagates from <code>div#c</code> shadow root to the host element, the event <code>target</code> is set to <code>div#c</code>. In the same way, once the event propagates through <code>div#a</code> shadow boundary, the event target is set to <code>div#a</code>.</p>
+<p>One interesting side-effect of event retargeting is that once the event is done propagating, the event <code>target</code> is always set to the outermost host element. In the case where you are doing debouncing, the event <code>target</code> should be <a href="https://github.com/salesforce/lwc/issues/2265">cached</a>, otherwise the debounced method loses track of the event target.</p>
+<h2 id="slotted-content">Slotted content <a class="header-anchor" href="#slotted-content">#</a></h2>
+<p>Shadow DOM enables slotting content into a component using the <code>&lt;slot&gt;</code> tag. <strong>When an event bubbles from a slotted node, the event propagates into the shadow tree first before propagating to the host element</strong>. This is true whether the event is <code>composed</code> or not.</p>
+<event-visualizer label="Slotted content" event-bubbles>
+  <template>
+    <div id="a">
+      <template data-shadowroot="open">
+        <div id="c">
+          <slot id="d"></slot>
+          <img id="e"></img>
+        </div>
+      </template>
+      <p id="b" target></p>
+    </div>
+  </template>
+</event-visualizer>
+<p>In the example above, <code>p#b</code> is slotted into the <code>div#a</code> shadow tree. When a bubbling event is dispatched from <code>p#b</code>, instead of propagating directly to <code>div#a</code>, it first propagates through all the elements in the shadow tree. This means that this event can be intercepted by <code>slot#d</code>, <code>div#c</code>, or the shadow root before reaching <code>div#a</code>.</p>
+<h2 id="event.prototype.composedpath"><code>Event.prototype.composedPath</code> <a class="header-anchor" href="#event.prototype.composedpath">#</a></h2>
+<p>The <a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath"><code>Event.prototype.composedPath</code></a> method returns an array with all the nodes, in order, through which the event propagates.</p>
+<event-visualizer label="Single shadow tree" event-bubbles event-composed>
+  <template>
+    <div id="a">
+      <template data-shadowroot="open">
+        <p id="c">
+          <span id="d" target></span>
+        </p>
+        <p id="e"></p>
+      </template>
+      <img id="b"></img>
+    </div>
+  </template>
+</event-visualizer>
+<p>When a bubbling and composed event is dispatched from <code>span#d</code> the composed path contains <code>span#d</code>, <code>p#c</code>, shadow root, and <code>div#a</code>. Something important to note about the composed path is that it not only includes the node with listeners that are invoked by this event but all the nodes in the path. In the previous example, when changing <code>bubbles</code> to <code>false</code> and leaving <code>composed</code> to <code>true</code>, the composed path remains identical even though the event directly propagates from <code>span#d</code> to <code>div#a</code>.</p>
+<p>Careful readers might notice that the composed path remains identical as the event propagate, while the target is retargeted. The composed path offers an escape hatch to the shadow DOM encapsulation model as it gives you access to component internals. For example, as the event reaches <code>div#a</code>, its target is set to <code>div#a</code>. However, it is always possible to get a handle on the node which originally dispatched the event by looking up the first entry in the composed path.</p>
+<p>Something that hasn't been discussed in this article is the shadow tree <a href="https://developer.mozilla.org/en-US/docs/Web/API/ShadowRoot/mode"><code>mode</code></a>. Until now all the shadow trees presented in this article were <code>open</code> shadow trees. Open shadow enforces a loose encapsulation as it is possible to get access to its internals via <code>Element.prototype.shadowRoot</code> and <code>Event.prototype.composedPath</code>.</p>
+<p>Strict encapsulation can be enforced by setting the shadow root  to <code>closed</code>. In this mode, <code>Element.prototype.shadowRoot</code> always returns <code>null</code> regardless of whether a shadow tree is attached to the element or not. The composed path also omits nodes from closed shadow trees.</p>
+<event-visualizer label="Nested closed shadow trees" event-bubbles event-composed>
+  <template>
+    <div id="a">
+      <template data-shadowroot="closed">
+        <div id="c">
+          <template data-shadowroot="closed">
+            <span id="e" target></span>
+          </template>
+          <p id="d"></p>
+        </div>
+      </template>
+      <img id="b"></img>
+    </div>
+  </template>
+</event-visualizer>
+<p>The example above illustrates this behavior with nested shadow trees. When dispatched from <code>span#e</code> the composed path contains all the nodes in its path from <code>span#e</code> to <code>div#a</code>. But as it propagates to <code>div#c</code> and <code>div#a</code>, the composed path drops all the node from the closed shadow tree the event originates from.</p>
+<p>Here is an even more contrived example with a closed shadow tree and slotted content.</p>
+<event-visualizer label="Slotted content in closed shadow tree" event-bubbles>
+  <template>
+    <div id="a">
+      <template data-shadowroot="closed">
+        <div id="c">
+          <slot id="d"></slot>
+          <img id="e"></img>
+        </div>
+      </template>
+      <p id="b" target></p>
+    </div>
+  </template>
+</event-visualizer>
+<p>When dispatched from <code>p#b</code> the event composed path only includes <code>p#b</code> and <code>div#a</code>. When the event enters into the closed shadow tree and reaches <code>slot#d</code> its composed path is updated to include the shadow tree node. The composed path is set again to its original value when it escapes the shadow tree and reaches <code>div#a</code>.</p>
+<h2 id="closing-words">Closing words <a class="header-anchor" href="#closing-words">#</a></h2>
+<p>By now you should have a better idea of how eventing and shadow DOM work together. Here are a couple of takeaways:</p>
+<ul>
+<li>Events never cross shadow DOM boundaries except when <code>composed</code> is set to <code>true</code>.</li>
+<li>When the <code>bubbles</code> option is set to <code>true</code> events propagate through the parent-child hierarchy. And when the <code>composed</code> option is set to <code>true</code> events propagate through the shadow tree hierarchy.</li>
+<li><code>Event.prototype.target</code> is set to the host element when traversing a shadow tree boundary.</li>
+<li><code>Event.prototype.composedPath</code> returns all the nodes the event propagates through except when the shadow root <code>mode</code> is set to <code>closed</code>.</li>
+</ul>
+<p>If you are still uncertain how it works in a specific scenario not covered in this article you can always edit any of the event visualizations in <a href="https://codepen.io/pmdartus/pen/ZELJRyX?editors=1000">Codepen</a>. For the most curious ones, the interactive examples are indeed web components built using <a href="https://lit.dev/">lit</a> and <a href="https://roughjs.com/">Rough.js</a>. The source code can be found <a href="https://github.com/pmdartus/event-visualizer">here</a>.</p>
+<p><em>Thanks to <a href="https://nolanlawson.com/">Nolan Lawson</a> for feedback on the draft of this blog post.</em></p>
+<!-- This URL is loading the source code non-minified. As of today, Skypack fails to minify some of the file resulting in requests timing out. -->
+<script type="module" src="https://cdn.skypack.dev/pin/@pmdartus/event-visualizer@v3.0.0-1NQp6WHFWM5X1NeR4b3Q/mode=imports/optimized/@pmdartus/event-visualizer.js"></script>
+
+    </section>
+  </article>
+
+  <ul class="pagination"><li><a href="/blog/step-up-your-lwc-skills-part-2/">Step Up Your LWC skills - Part 2 →</a></li>
+  </ul>
+
+    </main>
+
+    <footer>
+  © 2021 Pierre-Marie Dartus
+</footer>
+</body>
+</html>

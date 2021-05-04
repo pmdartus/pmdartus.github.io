@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://pm.dartus.fr/blog/step-up-your-lwc-skills-part-1/</loc>
+    <lastmod>2021-05-04</lastmod>
+  </url>
+  <url>
+    <loc>https://pm.dartus.fr/blog/step-up-your-lwc-skills-part-2/</loc>
+    <lastmod>2021-05-04</lastmod>
+  </url>
+  <url>
+    <loc>https://pm.dartus.fr/blog/a-complete-guide-on-shadow-dom-and-event-propagation/</loc>
+    <lastmod>2021-05-04</lastmod>
+  </url>
+  <url>
+    <loc>https://pm.dartus.fr/blog/</loc>
+    <lastmod>2021-05-04</lastmod>
+  </url>
+  <url>
+    <loc>https://pm.dartus.fr/</loc>
+    <lastmod>2021-05-04</lastmod>
+  </url>
+</urlset>
